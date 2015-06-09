@@ -10,10 +10,12 @@ typedef struct Token
 
 void load();
 int isSymbol(int x);
-void prinCleanInput();
-int isEnd(char string []);
+void printCleanInput();
+int isEnd();
 void skipComment();
+void printTest();
 
+char buffer[256];
 FILE *codeFile;
 FILE *output;
 int structIndex = 0;
@@ -43,7 +45,8 @@ int main()
     output = fopen("cleaninput.txt", "w");
     initArrays();
     load();
-    prinCleanInput();
+    //printTest();
+    printCleanInput();
     return 0;
 }
 
@@ -51,82 +54,96 @@ int main()
 //code output and further token processing.
 void load()
 {
-    char buffer[256];
+    codeCount = 0;
     char symbolBuffer[2];
     int i = 0;
-    int x, prev = 0, codeIndex;
+    int x, prev = 0, codeIndex, endSwitch = 0, commentSwitch = 0;
     if(!codeFile)
     {
         printf("Error in opening the file.");
         exit(0);
-
     }
-    while ((x = fgetc(codeFile)) != EOF)
+    while (isEnd() != 1)
     {
+        x = fgetc(codeFile);
+        //printf("%d", codeCount);
         //printf("this iteration of x is %c \n", x);
         char tempString [10];
 
         if(isSymbol(x))
         {
-            if(x == '*' && prev == '/')
+            if(x == '*')
             {
                 //skip over comment and continue
                 skipComment();
-                prev = 0;
+                prev = 33;
                 continue;
             }
 
-            //if(!isSymbol(prev))
-                put(codeArray, buffer);
-
+            if(!isSymbol(prev))
+            {
+                codeCount += 2;
+               //printf("\nthe string is %c%c%c\n", buffer[0],buffer[1],buffer[2]);
+               put(codeArray, buffer);
+              // printf("%s", buffer);
+            }
 
             symbolBuffer[0] = x;
             symbolBuffer[1] = '\0';
             put(codeArray, symbolBuffer);
-            if(isEnd(buffer))
-                break;
+            endSwitch = isEnd();
             i = 0;
         }
         else
         {
+            codeCount ++;
             buffer[i] = x;
             buffer[i+1] = '\0';
             i++;
         }
         prev = x;
+        //printf("%d\n", codeCount);
 
     }
-    printArrayList(codeArray);
+    put(codeArray, "end.");
+    //printArrayList(codeArray);
     fclose(codeFile);
 
 }
 
 int isSymbol(int x)
 {
-    if((x>=32 && x<=47) || (x>=58 && x<=64) || (x>= 91 && x<=96) || (x>=123 && x<=126))
+    if((x>=0 && x<=47) || (x>=58 && x<=64) || (x>= 91 && x<=96) || (x>=123 && x<=126))
     {
         return 1;
     }
     return 0;
 }
 
-void prinCleanInput()
+void printCleanInput()
 {
     int i = 0;
     char* tempString;
-    while(i <= codeCount)
+   //printf("the count code is %d", codeCount);
+    while(i < codeCount)
     {
+        int temp;
+        tempString = get(codeArray, i);
+        temp = tempString[0];
        if((tempString = get(codeArray, i)) == "\n")
             fprintf(output, "\n");
-        fprintf(output, "%s", tempString);
+        if(temp != 47)
+            fprintf(output, "%s", tempString);
         i ++;
     }
     fclose(output);
 }
 
-int isEnd (char string [])
+int isEnd ()
 {
-    if (string[0] == 'e' && string[1] == 'n' && string[2] == 'd')
+    //printf("code cont is %d", codeCount);
+    //printf("\n1-> %d. 2-> %d, 3-> %d\n", buffer[0], buffer[1], buffer[2]);
+    if (buffer[0] == 'e' && buffer[1] == 'n' && buffer[2] == 'd')
         return 1;
     return 0;
 }
@@ -139,5 +156,14 @@ void skipComment()
             previousPointer = currentPointer;
             currentPointer = fgetc(codeFile);
         }
-       // fseek(output, -10, SEEK_CUR);
 }
+void printTest()
+{
+
+    printf("the index is %d\n", get(codeArray, 20)[0]);
+    printf("the index is %d\n", get(codeArray, 20)[1]);
+    printf("the index is %d\n", get(codeArray, 20)[2]);
+    printf("the index is %s\n", get(codeArray, 20));
+
+}
+
