@@ -68,13 +68,12 @@ void load()
         x = fgetc(codeFile);
         //printf("%d", codeCount);
         //printf("this iteration of x is %c \n", x);
-        char tempString [10];
+        char tempString [256];
 
         if(isSymbol(x))
         {
             if(x == '*')
             {
-                //skip over comment and continue
                 skipComment();
                 prev = 33;
                 continue;
@@ -85,13 +84,14 @@ void load()
                 codeCount += 2;
                //printf("\nthe string is %c%c%c\n", buffer[0],buffer[1],buffer[2]);
                put(codeArray, buffer);
-              // printf("%s", buffer);
+               printf("\n%s\n", buffer);
             }
 
             symbolBuffer[0] = x;
             symbolBuffer[1] = '\0';
             put(codeArray, symbolBuffer);
-            endSwitch = isEnd();
+            printf("\n%s\n", symbolBuffer);
+            //endSwitch = isEnd();
             i = 0;
         }
         else
@@ -103,7 +103,6 @@ void load()
         }
         prev = x;
         //printf("%d\n", codeCount);
-
     }
     put(codeArray, "end.");
     //printArrayList(codeArray);
@@ -164,6 +163,12 @@ void printTest()
     printf("the index is %d\n", get(codeArray, 20)[1]);
     printf("the index is %d\n", get(codeArray, 20)[2]);
     printf("the index is %s\n", get(codeArray, 20));
+
+}
+
+void findToken()
+{
+
 
 }
 

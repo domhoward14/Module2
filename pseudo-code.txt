@@ -1,0 +1,61 @@
+TDL for findFunction
+#######################
+
+CodeArray --> double array for all the parsed strings
+
+algorithm
+
+	I. read the first letter if it is a letter
+			a.) Check if it matches one of the first letters of a reserved word send it to that switch.
+				1.)check all potential matches
+					2a.) if it matches one of the strings then make a string token.
+			b.) If it did not match any of the first letters then it is a identifier and we can make the 
+				token for it now.
+	
+	II.)If it is not a letter check the first index to see if it is a number.(Just check the range of the ascii value)
+		a.) If it is a number then make a number token.
+		b.) If it is not a number then send it to the findSymbol()
+	
+	III.) If  it gets to this point then it must be a symbol and we have to run it through a switch to find which one.
+		a.)If it matches one of the symbols then make a symbol token.
+		b.)If it goes through the entire switch and does not match anything then it is not valid just iterate to the next one.
+################
+
+tokenize()
+{
+	while(!endOfArray)
+		string = fetchString()
+		bos = fetchBOS()
+		if(isLetter(bos))
+			if(runRwSwitch(bos) == true)//<-- if true it also makes the put into the token array
+				codeIndex ++
+				continue
+			else
+				putIdentifierToken()
+				codeIndex ++
+				continue
+				
+		else
+			if ((TorF = ifNumber(bos)== true) 
+				makeNumToken()
+				codeIndex ++
+				continue
+			else
+				runSymbolSwitch(bos) //<-- runs a symbol switch to find the symbol. put it in array if found.
+				codeIndex ++  		//If not found then move to next.
+	end While
+	
+	
+###############################################
+	
+const, call
+var
+proce
+begin
+end, else
+if
+then
+while
+do
+read
+odd
