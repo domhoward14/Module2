@@ -36,7 +36,7 @@ tokenize()
 				continue
 				
 		else
-			if ((TorF = ifNumber(bos)== true) 
+			if (isNumber(bos)) 
 				makeNumToken()
 				codeIndex ++
 				continue
@@ -46,16 +46,36 @@ tokenize()
 	end While
 	
 	
-###############################################
 	
-const, call
-var
-proce
-begin
-end, else
-if
-then
-while
-do
-read
-odd
+###############################################
+RESERVERD WORDS
+	const, call
+	var
+	proce
+	begin
+	end, else
+	if
+	then
+	while
+	do
+	read
+	odd
+
+######################
+remove all index's that have the ascii value of
+	1.)10
+	2.)32
+	3.)47
+	4.)9
+	5.)11
+#######################
+
+Functions TDL(These plus tokenize() needs to be tested )
+	1.)wordSwitch()
+	2.)isNumber()
+	3.)symbolSwitch()
+	4.)putIdentifierToken()
+	5.)putNumToken()
+	6.)putReserveToken()
+	7.)putSymbolToken()
+	

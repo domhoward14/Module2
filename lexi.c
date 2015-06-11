@@ -8,12 +8,14 @@ typedef struct Token
     int sym;
 }Token;
 
+void  cleanArrayList();
 void load();
 int isSymbol(int x);
 void printCleanInput();
 int isEnd();
 void skipComment();
 void printTest();
+int isLetter(char letter);
 
 char buffer[256];
 FILE *codeFile;
@@ -45,8 +47,9 @@ int main()
     output = fopen("cleaninput.txt", "w");
     initArrays();
     load();
-    //printTest();
-    printCleanInput();
+    //printCleanInput();
+    //cleanArrayList();
+    printTest();
     return 0;
 }
 
@@ -84,14 +87,13 @@ void load()
                 codeCount += 2;
                //printf("\nthe string is %c%c%c\n", buffer[0],buffer[1],buffer[2]);
                put(codeArray, buffer);
-               printf("\n%s\n", buffer);
+               //printf("\n%s\n", buffer);
             }
 
             symbolBuffer[0] = x;
             symbolBuffer[1] = '\0';
             put(codeArray, symbolBuffer);
-            printf("\n%s\n", symbolBuffer);
-            //endSwitch = isEnd();
+            //printf("\n%s\n", symbolBuffer);
             i = 0;
         }
         else
@@ -124,7 +126,7 @@ void printCleanInput()
     int i = 0;
     char* tempString;
    //printf("the count code is %d", codeCount);
-    while(i < codeCount)
+    while(i < codeArray ->size)
     {
         int temp;
         tempString = get(codeArray, i);
@@ -158,17 +160,68 @@ void skipComment()
 }
 void printTest()
 {
-
-    printf("the index is %d\n", get(codeArray, 20)[0]);
-    printf("the index is %d\n", get(codeArray, 20)[1]);
-    printf("the index is %d\n", get(codeArray, 20)[2]);
-    printf("the index is %s\n", get(codeArray, 20));
-
 }
 
+void cleanArrayList()
+{
+    char* tempString;
+    int temp;
+    for(int i = 0; i < codeArray ->size; i ++)
+    {
+        tempString = get(codeArray, i);
+        temp = tempString[0];
+        if(temp == 0 || temp == 10 || temp == 47 || temp == 9 || temp == 11 || temp == 32)
+        {
+            removeElement(codeArray,i);
+            i --;
+        }
+    }
+}
+/*
 void findToken()
 {
-
-
+    int i = 0;
+    char * string;
+    char bos;
+    while(i < codeArray ->size)
+    {
+            string = get(codeArray, i);
+            bos = string[0];
+            if(isLetter(bos))
+            {
+                if(wordSwitch())
+                {
+                    index ++
+                    continue;
+                }
+                else
+                {
+                    putIdentifierToken();
+                    i ++;
+                    continue;
+                }
+            }
+            else
+            {
+                if(isNumber())
+                {
+                    makeNumToken();
+                    i ++;
+                    continue;
+                }
+                else
+                    symbolSwitch();
+                    i ++;
+            }
+    }
 }
-
+*/
+int isLetter(char letter)
+{
+    if(letter >= 65 && letter <= 90)
+        return 1;
+    else if(letter >= 97 && letter <= 122)
+        return 1;
+    else
+        return 0;
+}

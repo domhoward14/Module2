@@ -159,7 +159,8 @@ ArrayList *expandArrayList(ArrayList *list, int length)
 //printing the entire array list
 void printArrayList(ArrayList *list)
 {
-    int i;
+    int i,temp;
+    char* tempString;
     //if the list is not a null pointer and the first element of the array is used up, print the contents
     if(list!=NULL&&list&&list->array[0]!=NULL)
     {
@@ -167,7 +168,10 @@ void printArrayList(ArrayList *list)
         {
             if(list->array[i]!=NULL)
             {
+                char* tempString = list->array[i];
+                temp = tempString[0];
                 printf("%s\n", list->array[i]);
+                printf("The ascii value is --> %d\n", temp);
             }
         }
     }
