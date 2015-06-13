@@ -49,14 +49,14 @@ tokenize()
 	
 ###############################################
 RESERVERD WORDS
-	const, call
+	const, call .....
 	var
 	proce
 	begin
 	end, else
 	if
 	then
-	while
+	while,write
 	do
 	read
 	odd
@@ -78,4 +78,11 @@ Functions TDL(These plus tokenize() needs to be tested )
 	5.)putNumToken()
 	6.)putReserveToken()
 	7.)putSymbolToken()
+	8.)putWordToken()
 	
+need to modify code to recognize
+	1.) not equal
+	2.) less then equal
+	3.) greater then equal
+	4.) 
+#############################

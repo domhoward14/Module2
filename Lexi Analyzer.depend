@@ -1,8 +1,9 @@
 # depslib dependency file v1.0
-1434046151 source:c:\users\eric\cop 3402 projects\lexi analyzer\lexi.c
+1434189318 source:c:\users\eric\cop 3402 projects\lexi analyzer\lexi.c
 	<stdio.h>
 	<stdlib.h>
 	"ArrayList.c"
+	<string.h>
 
 1434046479 c:\users\eric\cop 3402 projects\lexi analyzer\arraylist.c
 	<stdio.h>

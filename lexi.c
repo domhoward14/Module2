@@ -9,6 +9,8 @@ typedef struct Token
     int sym;
 }Token;
 
+void errorCheck();
+void printLexemeList();
 void  cleanArrayList();
 void load();
 int isSymbol(int x);
@@ -25,6 +27,10 @@ int symbolSwitch(char *string);
 int isNumber(char *string);
 int wordSwitch(char *string);
 void findToken();
+void printLexemeTable();
+int isNextGts();
+int isNextEqual();
+
 
 
 
@@ -32,10 +38,14 @@ void findToken();
 char buffer[256];
 FILE *codeFile;
 FILE *output;
+FILE *lexemeTable;
+FILE *lexemeList;
 int structIndex = 0;
+int getter;
 int codeCount = 0;
 Token *tokenArray;
 ArrayList *codeArray;
+int tokenArrayCount = 0;
 
 void structPut(char *word, int num)
 {
@@ -59,10 +69,13 @@ int main()
     output = fopen("cleaninput.txt", "w");
     initArrays();
     load();
-    //printCleanInput();
+    printCleanInput();
     cleanArrayList();
     findToken();
-    printTest();
+    errorCheck();
+    printLexemeTable();
+    printLexemeList();
+    //printTest();
     return 0;
 }
 
@@ -119,7 +132,8 @@ void load()
         prev = x;
         //printf("%d\n", codeCount);
     }
-    put(codeArray, "end.");
+    put(codeArray, "end");
+    put(codeArray, ".");
     //printArrayList(codeArray);
     fclose(codeFile);
 
@@ -173,8 +187,8 @@ void skipComment()
 }
 void printTest()
 {
-    findToken();
-    printf("%d, %s", tokenArray[4].sym, tokenArray[4].word );
+    for(int i = 0; i < codeArray->size; i ++)
+        printf("%s\n", codeArray->array[i]);
 }
 
 void cleanArrayList()
@@ -196,23 +210,24 @@ void cleanArrayList()
 void findToken()
 {
     structIndex = 0;
+    getter = 0;
     char * string;
     char bos;
-    while(structIndex < codeArray ->size)
+    while(getter < codeArray ->size)
     {
-            string = get(codeArray, structIndex);
+            string = get(codeArray, getter);
             bos = string[0];
             if(isLetter(bos))
             {
                 if(wordSwitch(string))
                 {
-                    structIndex ++;
+                    getter ++;
                     continue;
                 }
                 else
                 {
                     putIdentifierToken(string);
-                    structIndex ++;
+                    getter ++;
                     continue;
                 }
             }
@@ -220,17 +235,15 @@ void findToken()
             {
                 if(isNumber(string))
                 {
-                    putNumToken(string);
-                    structIndex ++;
+                    getter ++;
                     continue;
                 }
                 else
                     symbolSwitch(string);
-                    structIndex ++;
+                    getter ++;
             }
     }
 }
-
 int isLetter(char letter)
 {
     if(letter >= 65 && letter <= 90)
@@ -414,17 +427,38 @@ int symbolSwitch(char *string)
             putSymbolToken(".", 19);
             break;
         case '<':
-            putSymbolToken("<", 11);
+            if(isNextEqual())
+            {
+                putSymbolToken("<=", 12);
+                getter ++;
+            }
+            if(isNextGts())
+            {
+                putSymbolToken("<>", 10);
+                getter ++;
+            }
+            else
+                putSymbolToken("<", 11);
             break;
         case '>':
-            putSymbolToken(">", 13);
+            if(isNextEqual())
+            {
+                putSymbolToken(">=", 13);
+                getter ++;
+            }
+            else
+                putSymbolToken(">", 13);
             break;
         case ';':
             putSymbolToken(";", 18);
             break;
         case ':':
-            putSymbolToken(":=", 9);
+            putSymbolToken(":=", 20);
+            getter ++;
             break;
+        default:
+            printf("Invalid symbol.");
+            exit(1);
     }
 }
 
@@ -433,22 +467,98 @@ void putIdentifierToken(char *string)
 {
     tokenArray[structIndex].word = string;
     tokenArray[structIndex].sym = 2;
+    structIndex ++;
+    tokenArrayCount ++;
 }
 
 void putNumToken(char *string)
 {
     tokenArray[structIndex].word = string;
     tokenArray[structIndex].sym = 3;
+    structIndex ++;
+    tokenArrayCount ++;
 }
 
 void putReserveToken(char *string, int symbol)
 {
     tokenArray[structIndex].word = string;
     tokenArray[structIndex].sym = symbol;
+    structIndex ++;
+    tokenArrayCount ++;
 }
 
 void putSymbolToken(char *string, int symbol)
 {
     tokenArray[structIndex].word = string;
     tokenArray[structIndex].sym = symbol;
+    structIndex ++;
+    tokenArrayCount ++;
+}
+
+
+void printLexemeTable()
+{
+    lexemeTable = fopen("lexemetable.txt", "w");
+    fprintf(lexemeTable, "lexeme\t");
+    fprintf(lexemeTable,"token type\n");
+    int i = 0;
+    while(i < tokenArrayCount)
+    {
+        fprintf(lexemeTable, "%s\t", tokenArray[i].word);
+        fprintf(lexemeTable, "%d\n", tokenArray[i].sym);
+        i ++;
+    }
+    fclose(lexemeTable);
+}
+
+void printLexemeList()
+{
+    int i = 0;
+    lexemeList = fopen("lexemelist.txt", "w");
+    while(i < tokenArrayCount)
+    {
+        fprintf(lexemeList, "%d ", tokenArray[i].sym);
+        if(tokenArray[i].sym == 3 || tokenArray[i].sym == 2)
+            fprintf(lexemeList, "%s ", tokenArray[i].word);
+        i ++;
+    }
+    fclose(lexemeList);
+}
+
+
+int isNextEqual()
+{
+    char *string = get(codeArray, structIndex + 1);
+    if(string[0] == '=')
+        return 1;
+    return 0;
+}
+
+int isNextGts()
+{
+    char *string = get(codeArray, structIndex + 1);
+    if(string[0] == '>')
+        return 1;
+    return 0;
+}
+
+void errorCheck()
+{
+    int i = 0;
+    int limit = tokenArrayCount;
+    char *word;
+    char letter;
+    while(i < limit)
+    {
+
+        word = tokenArray[i].word;
+        letter = word[1];
+        if(isNumber(word) && isLetter(letter))
+        {
+            printf("invalid variable. Can not start with a number.");
+            exit(1);
+        }
+        i ++;
+    }
+
 }
