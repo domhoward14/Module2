@@ -72,10 +72,10 @@ int main()
     printCleanInput();
     cleanArrayList();
     findToken();
-    errorCheck();
+    //errorCheck();
     printLexemeTable();
     printLexemeList();
-    //printTest();
+    printTest();
     return 0;
 }
 
@@ -101,7 +101,7 @@ void load()
 
         if(isSymbol(x))
         {
-            if(x == '*')
+            if(x == '*' && prev == '/')
             {
                 skipComment();
                 prev = 33;
@@ -187,8 +187,20 @@ void skipComment()
 }
 void printTest()
 {
-    for(int i = 0; i < codeArray->size; i ++)
-        printf("%s\n", codeArray->array[i]);
+    int i = 0;
+   // while(i < tokenArrayCount)
+   // {
+    //    printf("%s\t", tokenArray[i].word);
+    //    printf("%d\n", tokenArray[i].sym);
+   //     i ++;
+    //}
+
+   //printf("The code account is %d", codeCount);
+   //printArrayList(codeArray);
+
+
+
+   // printf("%d\n", tokenArrayCount);
 }
 
 void cleanArrayList()
@@ -211,7 +223,7 @@ void findToken()
 {
     structIndex = 0;
     getter = 0;
-    char * string;
+    char *string;
     char bos;
     while(getter < codeArray ->size)
     {
@@ -242,6 +254,13 @@ void findToken()
                     symbolSwitch(string);
                     getter ++;
             }
+    }
+    int i = 0;
+    while(i < tokenArrayCount)
+    {
+        printf("%s\t", tokenArray[i].word);
+        printf("%d\n", tokenArray[i].sym);
+        i ++;
     }
 }
 int isLetter(char letter)
@@ -432,7 +451,7 @@ int symbolSwitch(char *string)
                 putSymbolToken("<=", 12);
                 getter ++;
             }
-            if(isNextGts())
+            else if(isNextGts())
             {
                 putSymbolToken("<>", 10);
                 getter ++;
@@ -458,7 +477,6 @@ int symbolSwitch(char *string)
             break;
         default:
             printf("Invalid symbol.");
-            exit(1);
     }
 }
 
@@ -469,6 +487,7 @@ void putIdentifierToken(char *string)
     tokenArray[structIndex].sym = 2;
     structIndex ++;
     tokenArrayCount ++;
+    printf("The count for the tokenArray is %d\n", tokenArrayCount);
 }
 
 void putNumToken(char *string)
@@ -477,6 +496,7 @@ void putNumToken(char *string)
     tokenArray[structIndex].sym = 3;
     structIndex ++;
     tokenArrayCount ++;
+    printf("The count for the tokenArray is %d\n", tokenArrayCount);
 }
 
 void putReserveToken(char *string, int symbol)
@@ -485,6 +505,7 @@ void putReserveToken(char *string, int symbol)
     tokenArray[structIndex].sym = symbol;
     structIndex ++;
     tokenArrayCount ++;
+    printf("The count for the tokenArray is %d\n", tokenArrayCount);
 }
 
 void putSymbolToken(char *string, int symbol)
@@ -493,6 +514,7 @@ void putSymbolToken(char *string, int symbol)
     tokenArray[structIndex].sym = symbol;
     structIndex ++;
     tokenArrayCount ++;
+    printf("The count for the tokenArray is %d\n", tokenArrayCount);
 }
 
 

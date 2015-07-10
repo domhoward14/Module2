@@ -84,5 +84,24 @@ need to modify code to recognize
 	1.) not equal
 	2.) less then equal
 	3.) greater then equal
-	4.) 
+	4.) become
+	
+	I.) Do this by making a test for any one of these chars
+		a.) < --> check if next is >
+		b.) < --> check if next is =
+		c.) > --> check if next is =
+		d.) : --> check if next is =
+	II.) If so then skip the counter plus one as well
+		isNextGts()
+		isNextEqual()
 #############################
+
+void errorCheck()
+
+	I.) loop through the token list and search for any 
+	words that have a number then a letter.
+	II.)
+###############################
+TDL
+	1.)Debug the error in the two numbers staying behind.
+	2.)change the incorrect symbols.
